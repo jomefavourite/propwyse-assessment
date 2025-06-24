@@ -3,9 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
+    "dev": "concurrently \"npm run dev:next --turbopack\" \"npm run dev:mock\" \"npm run dev:prism\"",
+    "dev:next": "next dev --turbopack",
+    "dev:prism": "prism proxy openapi/user-api.yaml http://localhost:3001 --port 4010 --cors --errors",
+    "dev:mock": "ts-node --project mock/tsconfig.mock.json mock/server.ts",
+    "build:mock": "tsc -p mock/tsconfig.mock.json",
+    "start:mock": "node dist/mock/server.js",
     "lint": "next lint"
   },
   "dependencies": {
@@ -15,6 +20,7 @@
     "@tanstack/react-query": "^5.81.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "express": "^5.1.0",
     "lucide-react": "^0.522.0",
     "next": "15.3.4",
     "next-themes": "^0.4.6",
@@ -27,15 +33,19 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@types/express": "^5.0.3",
+    "@types/json-server": "^0.14.8",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "concurrently": "^9.2.0",
     "eslint": "^9",
     "eslint-config-next": "15.3.4",
     "json-server": "^1.0.0-beta.3",
     "msw": "^2.10.2",
     "tailwindcss": "^4",
+    "ts-node": "^10.9.2",
     "tw-animate-css": "^1.3.4",
-    "typescript": "^5"
+    "typescript": "^5.8.3"
   }
 }

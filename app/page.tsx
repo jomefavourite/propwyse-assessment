@@ -1,28 +1,11 @@
 'use client';
 
 import type React from 'react';
-
-// import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import { Badge } from '@/components/ui/badge';
-import { Plus, Calendar, User } from 'lucide-react';
+import { Calendar, User } from 'lucide-react';
 import UserTable from '@/components/UserTable';
-import { Suspense, useEffect, useState } from 'react';
 import AddUserDialog from '@/components/AddUserDialog';
 import { API_BASE_URL } from '@/lib/utils';
-import { getQueryClient } from './get-query-client';
 import { useQuery } from '@tanstack/react-query';
 
 interface User {
@@ -32,10 +15,14 @@ interface User {
   createdAt: string;
 }
 
-async function getUsers() {
+// "dev:prism": "prism proxy openapi/user-api.yaml http://localhost:3001 --port 4010 --cors --errors",
+
+const getUsers: () => Promise<User[]> = async () => {
   const res = await fetch(`${API_BASE_URL}/users`);
   return res.json();
-}
+};
+
+const dd = () => {};
 
 export default function UserManagement() {
   const { data, isLoading } = useQuery({

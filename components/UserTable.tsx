@@ -21,6 +21,7 @@ import { Loader2, Trash2, Mail, User } from 'lucide-react';
 import Link from 'next/link';
 import EditUserDialog from './EditUserDialog';
 import AddUserDialog from './AddUserDialog';
+import DeleteUserDialog from './DeleteUserDialog';
 
 interface User {
   id: string;
@@ -40,7 +41,7 @@ const formatDate = (dateString: string) => {
 };
 
 type UserTableType = {
-  users: User[];
+  users: User[] | undefined;
   loading: boolean;
 };
 
@@ -57,7 +58,7 @@ export default function UserTable({ users, loading }: UserTableType) {
             <Loader2 className='w-8 h-8 animate-spin' />
             <span className='ml-2'>Loading users...</span>
           </div>
-        ) : users.length === 0 ? (
+        ) : users?.length === 0 ? (
           <div className='text-center py-8'>
             <div className='w-12 h-12 mx-auto text-muted-foreground mb-4'>
               <User />
@@ -81,41 +82,34 @@ export default function UserTable({ users, loading }: UserTableType) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {users.map((user) => (
-                  <TableRow key={user.id}>
-                    <TableCell className='font-medium'>
-                      <Link href={`user/${user.id}`}>
-                        <div className='flex items-center'>
-                          <div className='w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center mr-3'>
-                            <User />
+                {users &&
+                  users?.map((user) => (
+                    <TableRow key={user.id}>
+                      <TableCell className='font-medium'>
+                        <Link href={`user/${user.id}`}>
+                          <div className='flex items-center'>
+                            <div className='w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center mr-3'>
+                              <User />
+                            </div>
+                            {user.name}
                           </div>
-                          {user.name}
+                        </Link>
+                      </TableCell>
+                      <TableCell>
+                        <div className='flex items-center'>
+                          <Mail className='w-4 h-4 mr-2 text-muted-foreground' />
+                          {user.email}
                         </div>
-                      </Link>
-                    </TableCell>
-                    <TableCell>
-                      <div className='flex items-center'>
-                        <Mail className='w-4 h-4 mr-2 text-muted-foreground' />
-                        {user.email}
-                      </div>
-                    </TableCell>
-                    <TableCell>{formatDate(user.createdAt)}</TableCell>
-                    <TableCell className='text-right'>
-                      <div className='flex items-center justify-end space-x-2'>
-                        <EditUserDialog user={user} />
-
-                        <Button
-                          variant='outline'
-                          size='sm'
-                          // onClick={() => deleteUser(user.id)}
-                          className='text-destructive hover:text-destructive'
-                        >
-                          <Trash2 className='w-4 h-4' />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                      </TableCell>
+                      <TableCell>{formatDate(user.createdAt)}</TableCell>
+                      <TableCell className='text-right'>
+                        <div className='flex items-center justify-end space-x-2'>
+                          <EditUserDialog user={user} />
+                          <DeleteUserDialog user={user} />
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
               </TableBody>
             </Table>
           </div>

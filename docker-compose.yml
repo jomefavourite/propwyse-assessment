@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_BASE_URL=http://localhost:4010
+    volumes:
+      - .:/app
+    command: npm run dev:next
+    depends_on:
+      - prism
+
+  mock-api:
+    image: node:18
+    working_dir: /app
+    volumes:
+      - .:/app
+    command: sh -c "npm install && npx ts-node mock/server.ts"
+    ports:
+      - "3001:3001"
+
+  prism:
+    image: stoplight/prism:4
+    command: proxy openapi/user-api.yaml http://mock-api:3001 --cors --errors --port 4010
+    ports:
+      - "4010:4010"
+    depends_on:
+      - mock-api
+    volumes:
+      - .:/app
+      - ./openapi:/tmp
+    working_dir: /app
