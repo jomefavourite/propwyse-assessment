@@ -68,7 +68,7 @@ export default function UserTable({ users, loading }: UserTableType) {
               Get started by creating your first user
             </p>
 
-            <AddUserDialog />
+            <AddUserDialog users={users} />
           </div>
         ) : (
           <div className='overflow-x-auto'>

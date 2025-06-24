@@ -22,19 +22,28 @@ const getUsers: () => Promise<User[]> = async () => {
   return res.json();
 };
 
-const dd = () => {};
-
 export default function UserManagement() {
   const { data, isLoading } = useQuery({
     queryKey: ['users'],
     queryFn: getUsers,
   });
 
-  const date = null;
+  const date =
+    data && data.length > 0
+      ? new Date(
+          Math.max(...data.map((user) => new Date(user.createdAt).getTime()))
+        ).toLocaleString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+        })
+      : '---';
 
   return (
     <div className='container mx-auto p-6 space-y-6'>
-      <div className='flex items-center justify-between'>
+      <div className='flex md:items-center justify-between flex-col md:flex-row gap-4'>
         <div>
           <h1 className='text-3xl font-bold'>User Management</h1>
           <p className='text-muted-foreground'>
@@ -42,10 +51,10 @@ export default function UserManagement() {
           </p>
         </div>
 
-        <AddUserDialog />
+        <AddUserDialog users={data} />
       </div>
 
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
         <Card>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
             <CardTitle className='text-sm font-medium'>Total Users</CardTitle>

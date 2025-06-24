@@ -46,7 +46,11 @@ const postUser = async (userData: User) => {
   return res.json();
 };
 
-export default function AddUserDialog() {
+export default function AddUserDialog({
+  users,
+}: {
+  users: User[] | undefined;
+}) {
   const queryClient = getQueryClient();
 
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
@@ -74,8 +78,17 @@ export default function AddUserDialog() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
     setSubmitting(true);
+
+    // Check for duplicate email
+    const emailExists = users?.some(
+      (user) => user.email.toLowerCase() === formData.email.toLowerCase()
+    );
+    if (emailExists) {
+      toast.error('A user with this email already exists.');
+      setSubmitting(false);
+      return;
+    }
 
     createUser.mutate({
       id: uuidv4(),
