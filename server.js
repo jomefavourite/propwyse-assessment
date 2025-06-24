@@ -1,9 +1,8 @@
 const jsonServer = require('json-server');
-import express, { Request, Response } from 'express';
 const path = require('path');
 const { v4: uuid } = require('uuid');
 
-const server = jsonServer.create() as express.Express;
+const server = jsonServer.create();
 const router = jsonServer.router(path.join(__dirname, 'db.json'));
 const middlewares = jsonServer.defaults();
 
@@ -13,13 +12,13 @@ server.use(middlewares);
 const getUsers = () => router.db.get('users');
 
 // GET /users
-server.get('/users', (req: Request, res: Response) => {
+server.get('/users', (req, res) => {
   const users = getUsers().value();
   res.status(200).json(users);
 });
 
 // GET /users/:id
-server.get('/users/:id', (req: Request, res: Response): void => {
+server.get('/users/:id', (req, res) => {
   const user = getUsers().find({ id: req.params.id }).value();
   if (!user) {
     res.status(404).json({ error: 'User not found' });
@@ -29,7 +28,7 @@ server.get('/users/:id', (req: Request, res: Response): void => {
 });
 
 // POST /users
-server.post('/users', (req: Request, res: Response): void => {
+server.post('/users', (req, res) => {
   const { name, email } = req.body;
   if (!name || !email) {
     res.status(400).json({ error: 'Missing fields' });
@@ -48,7 +47,7 @@ server.post('/users', (req: Request, res: Response): void => {
 });
 
 // PUT /users/:id
-server.put('/users/:id', (req: Request, res: Response): void => {
+server.put('/users/:id', (req, res) => {
   const user = getUsers().find({ id: req.params.id }).value();
   if (!user) {
     res.status(404).json({ error: 'User not found' });
@@ -65,7 +64,7 @@ server.put('/users/:id', (req: Request, res: Response): void => {
 });
 
 // DELETE /users/:id
-server.delete('/users/:id', (req: Request, res: Response): void => {
+server.delete('/users/:id', (req, res) => {
   const user = getUsers().find({ id: req.params.id }).value();
   if (!user) {
     res.status(404).json({ error: 'User not found' });

@@ -35,7 +35,11 @@ const deleteUser = async (userData: User) => {
     method: 'DELETE',
   });
 
-  return res.json();
+  if (res.status !== 204) {
+    return res.json();
+  }
+
+  return null;
 };
 
 export default function DeleteUserDialog({ user }: DeleteUserDialogProps) {

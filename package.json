@@ -5,12 +5,10 @@
   "scripts": {
     "build": "next build",
     "start": "next start",
-    "dev": "concurrently \"npm run dev:next --turbopack\" \"npm run dev:mock\" \"npm run dev:prism\"",
-    "dev:next": "next dev --turbopack",
+    "dev": "concurrently \"npm run dev:next\" \"npm run dev:json\" \"npm run dev:prism\"",
+    "dev:next": "next dev",
+    "dev:json": "json-server --watch db.json --port 3001",
     "dev:prism": "prism proxy openapi/user-api.yaml http://localhost:3001 --port 4010 --cors --errors",
-    "dev:mock": "ts-node --project mock/tsconfig.mock.json mock/server.ts",
-    "build:mock": "tsc -p mock/tsconfig.mock.json",
-    "start:mock": "node dist/mock/server.js",
     "lint": "next lint"
   },
   "dependencies": {
