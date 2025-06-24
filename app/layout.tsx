@@ -5,7 +5,11 @@ import './globals.css';
 import { Toaster } from '@/components/ui/sonner';
 import Providers from '@/components/Providers';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  fallback: ['system-ui', 'sans-serif'],
+});
 
 export const metadata: Metadata = {
   title: 'User Management System',
