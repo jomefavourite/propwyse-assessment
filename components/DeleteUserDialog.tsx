@@ -11,9 +11,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button } from './ui/button';
-import { Edit, Plus, Trash2 } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Trash2 } from 'lucide-react';
 import { API_BASE_URL } from '@/lib/utils';
 import { getQueryClient } from '@/app/get-query-client';
 import { useMutation } from '@tanstack/react-query';

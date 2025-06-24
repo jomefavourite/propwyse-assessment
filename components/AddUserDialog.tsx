@@ -21,7 +21,7 @@ import { toast } from 'sonner';
 import { v4 as uuidv4 } from 'uuid';
 
 interface User {
-  id: any;
+  id: string;
   name: string;
   email: string;
   createdAt: string;

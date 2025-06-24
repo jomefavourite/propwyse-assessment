@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -17,7 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Loader2, Trash2, Mail, User } from 'lucide-react';
+import { Loader2, Mail, User } from 'lucide-react';
 import Link from 'next/link';
 import EditUserDialog from './EditUserDialog';
 import AddUserDialog from './AddUserDialog';
