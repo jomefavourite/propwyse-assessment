@@ -20,6 +20,7 @@ A **Next.js** frontend application that interacts with a **mock REST API** to pr
 
 ### ✅ Why `json-server`?
 - Provides a quick, filesystem-based REST API using a `db.json` file.
+- It is stateful (remembers the state of data saved)
 - Useful during early frontend development stages when a real backend isn't ready.
 - Supports all HTTP verbs (GET, POST, PUT, DELETE) out of the box.
 
@@ -66,7 +67,7 @@ npm run dev
 ```
 
 This will concurrently:
-- Start Next.js with Turbopack
+- Start Next.js
 - Start json-server at `http://localhost:3001`
 - Start Prism proxy at `http://localhost:4010` (your `NEXT_PUBLIC_API_BASE_URL`)
 
@@ -93,7 +94,6 @@ Make sure you use `NEXT_PUBLIC_API_BASE_URL=http://localhost:4010` in your `.env
 ## ⚠️ Known Issues & Notes
 
 - `DELETE` endpoints must return either `204 No Content` or `404 Not Found` to pass OpenAPI validation in Prism.
-- If `lightningcss` fails in Docker, do **not** install `lightningcss-linux-x64-gnu` manually. It will be auto-detected during `npm install`.
 - The file `user-api.yaml` must match all status codes your API returns. Prism throws 500 errors for unknown statuses.
 
 ---
