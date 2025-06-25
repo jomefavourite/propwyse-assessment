@@ -1,20 +1,58 @@
-import { notFound } from 'next/navigation';
+'use client';
+
+import { useQuery } from '@tanstack/react-query';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { API_BASE_URL } from '@/lib/utils';
 import DeleteUserDialog from '@/components/DeleteUserDialog';
+import { API_BASE_URL } from '@/lib/utils';
 
-const UserPage = async ({ params }: { params: Promise<{ id: string }> }) => {
-  const { id } = await params;
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  createdAt: string;
+}
 
-  const userDataRes = await fetch(`${API_BASE_URL}/users/${id}`);
+const fetchUser = async (id: string): Promise<User> => {
+  const res = await fetch(`${API_BASE_URL}/users/${id}`);
 
-  if (!userDataRes.ok) {
-    if (userDataRes.status === 404) return notFound();
-    throw new Error(`Failed to load user: ${userDataRes.status}`);
+  if (!res.ok) {
+    if (res.status === 404) {
+      throw new Error('NOT_FOUND');
+    }
+    throw new Error(`Failed to load user: ${res.status}`);
   }
 
-  const userData = await userDataRes.json();
+  return res.json();
+};
+
+export default function UserPage() {
+  const params = useParams();
+  const id = params?.id as string;
+
+  const {
+    data: userData,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['user', id],
+    queryFn: () => fetchUser(id),
+    enabled: !!id,
+  });
+
+  if (error instanceof Error && error.message === 'NOT_FOUND') {
+    notFound();
+  }
+
+  if (isLoading) {
+    return <div className='p-6'>Loading user...</div>;
+  }
+
+  if (!userData) {
+    return <div className='p-6 text-red-500'>User not found.</div>;
+  }
 
   return (
     <div className='container mx-auto p-6 space-y-6'>
@@ -31,6 +69,4 @@ const UserPage = async ({ params }: { params: Promise<{ id: string }> }) => {
       </DeleteUserDialog>
     </div>
   );
-};
-
-export default UserPage;
+}
