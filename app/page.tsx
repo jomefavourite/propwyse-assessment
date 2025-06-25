@@ -7,6 +7,7 @@ import UserTable from '@/components/UserTable';
 import AddUserDialog from '@/components/AddUserDialog';
 import { API_BASE_URL } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
+import { useMemo } from 'react';
 
 interface User {
   id: string;
@@ -14,8 +15,6 @@ interface User {
   email: string;
   createdAt: string;
 }
-
-// "dev:prism": "prism proxy openapi/user-api.yaml http://localhost:3001 --port 4010 --cors --errors",
 
 const getUsers: () => Promise<User[]> = async () => {
   const res = await fetch(`${API_BASE_URL}/users`);
@@ -28,18 +27,21 @@ export default function UserManagement() {
     queryFn: getUsers,
   });
 
-  const date =
-    data && data.length > 0
-      ? new Date(
-          Math.max(...data.map((user) => new Date(user.createdAt).getTime()))
-        ).toLocaleString('en-US', {
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-        })
-      : '---';
+  const date = useMemo(() => {
+    if (!data || data.length === 0) return '---';
+
+    const latest = new Date(
+      Math.max(...data.map((user) => new Date(user.createdAt).getTime()))
+    );
+
+    return latest.toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  }, [data]);
 
   return (
     <div className='container mx-auto p-6 space-y-6'>

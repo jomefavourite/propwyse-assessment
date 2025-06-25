@@ -1,15 +1,8 @@
 import type React from 'react';
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import './globals.css';
 import { Toaster } from '@/components/ui/sonner';
 import Providers from '@/components/Providers';
-
-const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-  fallback: ['system-ui', 'sans-serif'],
-});
 
 export const metadata: Metadata = {
   title: 'User Management System',
@@ -24,7 +17,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang='en'>
-      <body className={inter.className}>
+      <body>
         <Providers>{children}</Providers>
         <Toaster />
       </body>

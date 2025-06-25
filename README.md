@@ -1,36 +1,115 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🧩 User Management System (Frontend Assessment)
 
-## Getting Started
+A **Next.js** frontend application that interacts with a **mock REST API** to provide full CRUD operations for managing users. Built for performance, developer clarity, and local mocking capabilities.
 
-First, run the development server:
+---
+
+## 🗂 Tech Stack
+
+- **Next.js 15**
+- **TypeScript**
+- **TailwindCSS**
+- **React Query**
+- **JSON Server** – for fast prototyping of a REST API
+- **Prism (Stoplight)** – to mock an OpenAPI spec with validation
+- **Docker + Docker Compose**
+
+---
+
+## 📌 Purpose & Design Assumptions
+
+### ✅ Why `json-server`?
+- Provides a quick, filesystem-based REST API using a `db.json` file.
+- Useful during early frontend development stages when a real backend isn't ready.
+- Supports all HTTP verbs (GET, POST, PUT, DELETE) out of the box.
+
+### ✅ Why `Prism`?
+- Proxies requests through an OpenAPI spec (`user-api.yaml`) to validate:
+  - API contract adherence
+  - Correct response codes (e.g. `200`, `404`)
+- Useful for ensuring your frontend complies with API specifications.
+
+---
+
+## 📁 Project Structure
+
+```
+.
+├── db.json                # Mock data source for json-server
+│    
+├── openapi/
+│   └── user-api.yaml          # OpenAPI definition for Prism validation
+│
+├── app/
+│   └── user/[id]/page.tsx     # Dynamic User page with error handling
+│
+├── components/                # UI components and providers
+├── Dockerfile                 # Frontend container
+├── docker-compose.yml         # Orchestration for mock-api + frontend
+└── README.md                  # This file
+```
+
+---
+
+## 🛠 How to Run the App Locally (No Docker)
+
+### 1. Install dependencies
+
+```bash
+npm install
+```
+
+### 2. Run `json-server` and `prism` with the frontend
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+This will concurrently:
+- Start Next.js with Turbopack
+- Start json-server at `http://localhost:3001`
+- Start Prism proxy at `http://localhost:4010` (your `NEXT_PUBLIC_API_BASE_URL`)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🐳 Running with Docker (Recommended for Consistency)
 
-## Learn More
+### 1. Build & Start containers
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+docker-compose up --build
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 2. Access the app
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Frontend: http://localhost:3000
+- Mock JSON API (internal): http://mock-api:3001
+- Validated API via Prism: http://localhost:4010
 
-## Deploy on Vercel
+Make sure you use `NEXT_PUBLIC_API_BASE_URL=http://localhost:4010` in your `.env` or Docker `environment:` section for the frontend to call Prism.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## ⚠️ Known Issues & Notes
+
+- `DELETE` endpoints must return either `204 No Content` or `404 Not Found` to pass OpenAPI validation in Prism.
+- If `lightningcss` fails in Docker, do **not** install `lightningcss-linux-x64-gnu` manually. It will be auto-detected during `npm install`.
+- The file `user-api.yaml` must match all status codes your API returns. Prism throws 500 errors for unknown statuses.
+
+---
+
+## 🧪 Testing API Endpoints (Optional)
+
+- `GET /users` – Fetch all users
+- `GET /users/:id` – Fetch single user
+- `POST /users` – Create a user
+- `PUT /users/:id` – Update a user
+- `DELETE /users/:id` – Delete a user
+
+You can test these endpoints directly via `http://localhost:4010` using tools like Postman or Insomnia.
+
+---
+
+## 📄 License
+
+MIT — free to use, modify, and distribute.
