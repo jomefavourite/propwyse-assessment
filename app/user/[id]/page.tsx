@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { API_BASE_URL } from '@/lib/utils';
+import DeleteUserDialog from '@/components/DeleteUserDialog';
 
 const UserPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
@@ -24,7 +25,10 @@ const UserPage = async ({ params }: { params: Promise<{ id: string }> }) => {
       </Link>
       <h1 className='text-3xl font-bold'>{userData.name}</h1>
       <p>Email: {userData.email}</p>
-      <Button>Delete User</Button>
+
+      <DeleteUserDialog user={userData}>
+        <Button>Delete User</Button>
+      </DeleteUserDialog>
     </div>
   );
 };

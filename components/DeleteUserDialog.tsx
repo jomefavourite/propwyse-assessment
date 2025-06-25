@@ -16,6 +16,7 @@ import { API_BASE_URL } from '@/lib/utils';
 import { getQueryClient } from '@/app/get-query-client';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 interface User {
   id: string;
@@ -26,6 +27,7 @@ interface User {
 
 type DeleteUserDialogProps = {
   user: User;
+  children?: React.ReactNode;
 };
 
 const deleteUser = async (userData: User) => {
@@ -40,8 +42,12 @@ const deleteUser = async (userData: User) => {
   return null;
 };
 
-export default function DeleteUserDialog({ user }: DeleteUserDialogProps) {
+export default function DeleteUserDialog({
+  user,
+  children,
+}: DeleteUserDialogProps) {
   const queryClient = getQueryClient();
+  const router = useRouter();
 
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
@@ -54,6 +60,7 @@ export default function DeleteUserDialog({ user }: DeleteUserDialogProps) {
       setIsEditDialogOpen(false);
 
       toast.success('User deleted!');
+      router.push('/');
     },
     onError: () => {
       toast.error('Error deleting user');
@@ -67,13 +74,17 @@ export default function DeleteUserDialog({ user }: DeleteUserDialogProps) {
   return (
     <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
       <DialogTrigger asChild>
-        <Button
-          variant='outline'
-          size='sm'
-          className='text-destructive hover:text-destructive'
-        >
-          <Trash2 className='w-4 h-4' />
-        </Button>
+        {children ? (
+          children
+        ) : (
+          <Button
+            variant='outline'
+            size='sm'
+            className='text-destructive hover:text-destructive'
+          >
+            <Trash2 className='w-4 h-4' />
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
