@@ -1,3 +1,10 @@
 {
-  "users": []
+  "users": [
+    {
+      "id": "e5443e06-ab7e-460c-8245-194c7dba2d84",
+      "createdAt": "2025-06-25T01:16:10.253Z",
+      "name": "Favourite Sally",
+      "email": "jfjomefavourite@gmail.com2"
+    }
+  ]
 }

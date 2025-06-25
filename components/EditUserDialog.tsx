@@ -55,10 +55,10 @@ export default function EditUserDialog({ user }: EditUserDialogProps) {
       queryClient.invalidateQueries({ queryKey: ['users'] });
       setIsEditDialogOpen(false);
 
-      toast.success('User created!');
+      toast.success('User updated!');
     },
     onError: () => {
-      toast.error('Error creating user');
+      toast.error('Error updating user');
     },
   });
 

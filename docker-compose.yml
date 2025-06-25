@@ -11,6 +11,7 @@ services:
       - NEXT_PUBLIC_API_BASE_URL=http://prism:4010
     volumes:
       - .:/app
+    working_dir: /app
     command: npm run dev:next
     depends_on:
       - prism
@@ -23,6 +24,12 @@ services:
     command: sh -c "npx json-server --watch db.json --port 3001"
     ports:
       - "3001:3001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
 
   prism:
     image: stoplight/prism:4
@@ -30,6 +37,7 @@ services:
     ports:
       - "4010:4010"
     depends_on:
-      - mock-api
+      mock-api:
+        condition: service_healthy
     volumes:
       - ./openapi:/tmp
