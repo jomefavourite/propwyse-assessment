@@ -15,7 +15,7 @@ import { Trash2 } from 'lucide-react';
 import { API_BASE_URL } from '@/lib/utils';
 import { getQueryClient } from '@/app/get-query-client';
 import { useMutation } from '@tanstack/react-query';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 
 interface User {
@@ -48,6 +48,7 @@ export default function DeleteUserDialog({
 }: DeleteUserDialogProps) {
   const queryClient = getQueryClient();
   const router = useRouter();
+  const { toast } = useToast();
 
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
@@ -59,11 +60,11 @@ export default function DeleteUserDialog({
       queryClient.invalidateQueries({ queryKey: ['users'] });
       setIsEditDialogOpen(false);
 
-      toast.success('User deleted!');
+      toast({ title: 'User deleted!' });
       router.push('/');
     },
     onError: () => {
-      toast.error('Error deleting user');
+      toast({ variant: 'destructive', title: 'Error deleting user' });
     },
   });
 
@@ -104,12 +105,7 @@ export default function DeleteUserDialog({
           >
             Cancel
           </Button>
-          <Button
-            type='submit'
-            onClick={handleDelete}
-            // disabled={submitting}
-          >
-            {/* {submitting && <Loader2 className='w-4 h-4 mr-2 animate-spin' />} */}
+          <Button type='submit' onClick={handleDelete}>
             Delete User
           </Button>
         </DialogFooter>

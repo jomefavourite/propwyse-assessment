@@ -17,7 +17,7 @@ import { Label } from '@/components/ui/label';
 import { API_BASE_URL } from '@/lib/utils';
 import { getQueryClient } from '@/app/get-query-client';
 import { useMutation } from '@tanstack/react-query';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 interface User {
   id: string;
@@ -44,6 +44,7 @@ const putUser = async (userData: User) => {
 
 export default function EditUserDialog({ user }: EditUserDialogProps) {
   const queryClient = getQueryClient();
+  const { toast } = useToast();
 
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
@@ -55,10 +56,10 @@ export default function EditUserDialog({ user }: EditUserDialogProps) {
       queryClient.invalidateQueries({ queryKey: ['users'] });
       setIsEditDialogOpen(false);
 
-      toast.success('User updated!');
+      toast({ title: 'User updated!' });
     },
     onError: () => {
-      toast.error('Error updating user');
+      toast({ variant: 'destructive', title: 'Error updating user' });
     },
   });
 
@@ -94,7 +95,7 @@ export default function EditUserDialog({ user }: EditUserDialogProps) {
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className='space-y-4'>
-            <div>
+            <div className='grid flex-1 gap-2'>
               <Label htmlFor='edit-name'>Name *</Label>
               <Input
                 id='edit-name'
@@ -104,7 +105,7 @@ export default function EditUserDialog({ user }: EditUserDialogProps) {
                 required
               />
             </div>
-            <div>
+            <div className='grid flex-1 gap-2'>
               <Label htmlFor='edit-email'>Email *</Label>
               <Input
                 id='edit-email'
@@ -126,13 +127,7 @@ export default function EditUserDialog({ user }: EditUserDialogProps) {
             >
               Cancel
             </Button>
-            <Button
-              type='submit'
-              // disabled={submitting}
-            >
-              {/* {submitting && <Loader2 className='w-4 h-4 mr-2 animate-spin' />} */}
-              Update User
-            </Button>
+            <Button type='submit'>Update User</Button>
           </DialogFooter>
         </form>
       </DialogContent>

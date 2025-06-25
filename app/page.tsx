@@ -31,7 +31,7 @@ export default function UserManagement() {
     if (!data || data.length === 0) return '---';
 
     const latest = new Date(
-      Math.max(...data.map((user) => new Date(user.createdAt).getTime()))
+      Math.max(...data?.map((user) => new Date(user.createdAt).getTime()))
     );
 
     return latest.toLocaleString('en-US', {

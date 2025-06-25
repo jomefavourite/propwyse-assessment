@@ -1,3 +1,5 @@
+version: '3.9'
+
 services:
   frontend:
     build:
@@ -6,10 +8,12 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - NEXT_PUBLIC_API_BASE_URL=http://prism:4010
+      - NEXT_PUBLIC_API_BASE_URL=http://localhost:4010
     volumes:
       - .:/app
     command: npm run dev:next
+    depends_on:
+      - prism
 
   mock-api:
     image: node:20
@@ -22,16 +26,10 @@ services:
 
   prism:
     image: stoplight/prism:4
-    command: proxy /tmp/user-api.yaml http://mock-api:3001 --cors --errors --port 4010
+    command: proxy -h 0.0.0.0 /tmp/user-api.yaml http://mock-api:3001 --cors --errors --port 4010
     ports:
       - "4010:4010"
     depends_on:
       - mock-api
     volumes:
       - ./openapi:/tmp
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:4010"]
-      interval: 5s
-      timeout: 3s
-      retries: 10
-

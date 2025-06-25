@@ -17,7 +17,7 @@ import { Label } from '@/components/ui/label';
 import { API_BASE_URL } from '@/lib/utils';
 import { getQueryClient } from '@/app/get-query-client';
 import { useMutation } from '@tanstack/react-query';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 import { v4 as uuidv4 } from 'uuid';
 
 interface User {
@@ -52,6 +52,7 @@ export default function AddUserDialog({
   users: User[] | undefined;
 }) {
   const queryClient = getQueryClient();
+  const { toast } = useToast();
 
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [formData, setFormData] = useState<UserInput>({ name: '', email: '' });
@@ -66,10 +67,10 @@ export default function AddUserDialog({
 
       setIsCreateDialogOpen(false);
       setFormData({ name: '', email: '' });
-      toast.success('User created!');
+      toast({ title: 'User created!' });
     },
     onError: () => {
-      toast.error('Error creating user');
+      toast({ variant: 'destructive', title: 'Error creating user' });
     },
     onSettled: () => {
       setSubmitting(false);
@@ -85,7 +86,10 @@ export default function AddUserDialog({
       (user) => user.email.toLowerCase() === formData.email.toLowerCase()
     );
     if (emailExists) {
-      toast.error('A user with this email already exists.');
+      toast({
+        variant: 'destructive',
+        title: 'A user with this email already exists.',
+      });
       setSubmitting(false);
       return;
     }
@@ -115,7 +119,7 @@ export default function AddUserDialog({
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className='space-y-4'>
-            <div>
+            <div className='grid flex-1 gap-2'>
               <Label htmlFor='name'>Name *</Label>
               <Input
                 id='name'
@@ -127,7 +131,7 @@ export default function AddUserDialog({
                 required
               />
             </div>
-            <div>
+            <div className='grid flex-1 gap-2'>
               <Label htmlFor='email'>Email *</Label>
               <Input
                 id='email'

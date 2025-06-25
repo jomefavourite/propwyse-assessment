@@ -19,7 +19,7 @@ const UserPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   return (
     <div className='container mx-auto p-6 space-y-6'>
       <Link href='/'>
-        <Button size='sm' variant='ghost'>
+        <Button size='sm' variant='outline'>
           Back
         </Button>
       </Link>
